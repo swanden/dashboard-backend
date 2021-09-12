@@ -32,9 +32,9 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: app
+      POSTGRES_USER: application
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: application
     ports:
       - "5432:5432"
   redis:
@@ -47,7 +47,7 @@ services:
       - '--save 900 1'
       - '--save 300 10'
       - '--save 60 10000'
-      - '--requirepass secret'
+      - '--requirepass password'
   mailer:
     image: mailhog/mailhog
     ports:

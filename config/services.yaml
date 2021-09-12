@@ -23,3 +23,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Security\OAuth\UserResolveListener:
+        arguments:
+            - '@App\Security\UserProvider'
+            - '@security.password_encoder'
+        tags:
+            - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+

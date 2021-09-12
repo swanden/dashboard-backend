@@ -16,4 +16,18 @@ class HomeController extends AbstractController
     {
         return new JsonResponse(['name' => 'API', 'version'=> '1.0']);
     }
+
+    #[Route('/api', name: 'api')]
+    public function api(): Response
+    {
+        return new JsonResponse(['name' => 'API', 'version'=> '1.0']);
+    }
+
+    #[Route('/api/profile', name: 'user_profile')]
+    public function profile(): Response
+    {
+        return new JsonResponse([
+            'data' => true
+        ]);
+    }
 }
