@@ -4,37 +4,56 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\ReadModel\User\AuthView;
+use App\ReadModel\User\UserFetcher;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
+final class UserProvider implements UserProviderInterface
 {
-    private UserRepository $userRepository;
+    public function __construct(
+        private UserFetcher $users
+    ) {}
 
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
     public function loadUserByUsername($username): UserInterface
     {
-        return $this->userRepository->findOneByEmail($username);
+        $user = $this->loadUser($username);
+        return self::identityByUser($user);
     }
 
-    public function refreshUser(UserInterface $user): UserInterface
+    public function refreshUser(UserInterface $identity): UserInterface
     {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
+        if (!$identity instanceof UserIdentity) {
+            throw new UnsupportedUserException('Invalid user class ' . \get_class($identity));
         }
 
-        return $this->userRepository->findOneByEmail($user->getUsername());
+        $user = $this->loadUser($identity->getUsername());
+        return self::identityByUser($user);
     }
 
-    public function supportsClass(string $class): bool
+    public function supportsClass($class): bool
     {
-        return User::class === $class || is_subclass_of($class, User::class);
+        return $class === UserIdentity::class;
+    }
+
+    private function loadUser($username): AuthView
+    {
+        if (!$user = $this->users->findForAuth($username)) {
+            throw new UsernameNotFoundException('Username not found', );
+        }
+        return $user;
+    }
+
+    private static function identityByUser(AuthView $user): UserIdentity
+    {
+        return new UserIdentity(
+            $user->id,
+            $user->email,
+            $user->password_hash,
+            $user->role,
+            $user->status
+        );
     }
 }

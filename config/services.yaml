@@ -14,12 +14,13 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/'
+        resource: '../src/*'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+            - '../src/Validator/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -30,4 +31,8 @@ services:
             - '@security.password_encoder'
         tags:
             - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+
+    App\Model\User\Service\ResetTokenizer:
+        factory: [ '@App\Model\User\Service\ResetTokenizerFactory', 'create' ]
+        arguments: [ 'PT1H' ]
 
