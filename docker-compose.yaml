@@ -9,7 +9,7 @@ services:
     depends_on:
       - php-fpm
     ports:
-      - "8080:80"
+      - "8081:80"
   php-fpm:
     build:
       context: ./docker
@@ -51,7 +51,7 @@ services:
   mailer:
     image: mailhog/mailhog
     ports:
-      - "8081:8025"
+      - "8082:8025"
 
 volumes:
   postgres:
