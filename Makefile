@@ -42,3 +42,5 @@ fixtures:
 	docker-compose run --rm php-cli bin/console doctrine:fixtures:load --no-interaction
 oauth-client:
 	docker-compose run --rm php-cli bin/console trikoder:oauth2:create-client client secret
+clear-cache:
+	docker-compose run --rm php-cli php bin/console cache:pool:clear cache.global_clearer

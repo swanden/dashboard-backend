@@ -24,7 +24,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         api_token:
-            pattern: ^/token$
+            pattern: ^/token|/auth.*$
             security: false
         api:
             pattern: ^/
@@ -53,3 +53,4 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
          - { path: ^/, roles: ROLE_USER }
+#         - { path: ^/token, roles: IS_AUTHENTICATED_ANONYMOUSLY }

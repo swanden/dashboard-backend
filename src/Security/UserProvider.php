@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Model\User\Entity\User\User;
 use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -41,7 +43,10 @@ final class UserProvider implements UserProviderInterface
     private function loadUser($username): AuthView
     {
         if (!$user = $this->users->findForAuth($username)) {
-            throw new UsernameNotFoundException('Username not found', );
+            throw new UserNotFoundException('Username not found', );
+        }
+        if ($user->status !== User::STATUS_ACTIVE) {
+            throw new AuthenticationException('User is not active');
         }
         return $user;
     }

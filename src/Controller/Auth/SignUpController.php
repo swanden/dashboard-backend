@@ -86,9 +86,4 @@ final class SignUpController extends BaseController
 
         return new JsonResponse(status: Response::HTTP_OK);
     }
-
-    public function user(): Response
-    {
-        return $this->json(['roles' => $this->getUser()->getRoles()], Response::HTTP_OK);
-    }
 }

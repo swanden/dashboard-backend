@@ -15,6 +15,8 @@ final class RequestValidator
             RequestType::GET => $request->query->all(),
             RequestType::POST => $request->request->all()
         };
+        
+        $requestParams = $requestParams ?? [];
 
         $errors = [];
         foreach ($reflection->getProperties() as $property) {

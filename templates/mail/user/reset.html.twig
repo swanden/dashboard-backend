@@ -4,7 +4,7 @@
 
     <p>Password Reset Link:</p>
 
-    {% set url = url('auth.reset.reset', {'token': token}) %}
+    {% set url = frontend_url ~ '/reset/' ~ token %}
 
     <p><a href="{{ url }}">{{ url }}</a></p>
 

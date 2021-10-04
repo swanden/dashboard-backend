@@ -7,7 +7,7 @@ namespace App\Serializer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class ErrorNormalizer // implements NormalizerInterface
+final class ErrorNormalizer implements NormalizerInterface
 {
     public function normalize($exception, string $format = null, array $context = [])
     {

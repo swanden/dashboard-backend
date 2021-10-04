@@ -38,7 +38,7 @@ final class UserFixture extends Fixture
         $manager->persist($user);
 
         $client = new Client('oauth_client', 'secret');
-        $client->setGrants(new Grant(OAuth2Grants::PASSWORD));
+        $client->setGrants(new Grant(OAuth2Grants::PASSWORD), new Grant(OAuth2Grants::REFRESH_TOKEN));
 
         $manager->persist($client);
 
