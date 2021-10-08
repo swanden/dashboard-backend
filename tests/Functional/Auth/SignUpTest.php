@@ -22,9 +22,9 @@ final class SignUpTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', self::URI, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'test-user@example.com',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'new-user@example.com',
             'password' => 'password',
         ]));
 
@@ -42,6 +42,8 @@ final class SignUpTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', self::URI, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'firstname' => 'John',
+            'lastname' => 'Doe',
             'email' => 'not-email'
         ]));
 
@@ -61,8 +63,8 @@ final class SignUpTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', self::URI, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'first_name' => '',
-            'last_name' => '',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
             'email' => 'not-email',
             'password' => 'short',
         ]));
@@ -91,9 +93,9 @@ final class SignUpTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('POST', self::URI, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'auth-user@example.com',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'test-user@example.com',
             'password' => 'password',
         ]));
 

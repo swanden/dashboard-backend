@@ -21,4 +21,9 @@ enum Role: string
     {
         return $this->name === $role->name;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

@@ -20,6 +20,11 @@ final class RequestValidator
 
         $errors = [];
         foreach ($reflection->getProperties() as $property) {
+            $attributes = array_map(fn($attribute) => $attribute->getName(), $property->getAttributes());
+            if (in_array(Annotations\Ignore::class, $attributes)) {
+                continue;
+            }
+
             if (!array_key_exists($property->name, $requestParams)) {
                 array_push($errors, "{$property->name} is required.");
             }

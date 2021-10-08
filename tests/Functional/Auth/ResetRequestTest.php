@@ -35,7 +35,7 @@ final class ResetRequestTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', self::URI, [], [], ['Content-Type' => 'application/json'], json_encode([
-            'email' => 'auth-user@example.com',
+            'email' => 'test-user@example.com',
         ]));
 
         self::assertEquals(201, $client->getResponse()->getStatusCode());
@@ -71,7 +71,7 @@ final class ResetRequestTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', self::URI, [], [], ['Content-Type' => 'application/json'], json_encode([
-            'email' => 'auth-user@example.com',
+            'email' => 'test-user@example.com',
         ]));
 
         self::assertEquals(201, $client->getResponse()->getStatusCode());
@@ -79,7 +79,7 @@ final class ResetRequestTest extends WebTestCase
         self::assertEmailCount(1);
 
         $client->request('POST', self::URI, [], [], ['Content-Type' => 'application/json'], json_encode([
-            'email' => 'auth-user@example.com',
+            'email' => 'test-user@example.com',
         ]));
 
         self::assertEquals(422, $client->getResponse()->getStatusCode());

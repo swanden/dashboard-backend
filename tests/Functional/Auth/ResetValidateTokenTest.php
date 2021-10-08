@@ -14,7 +14,7 @@ final class ResetValidateTokenTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', '/auth/reset/request', [], [], ['Content-Type' => 'application/json'], json_encode([
-            'email' => 'auth-user@example.com',
+            'email' => 'test-user@example.com',
         ]));
 
         self::assertEquals(201, $client->getResponse()->getStatusCode());
@@ -38,7 +38,7 @@ final class ResetValidateTokenTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', '/auth/reset/request', [], [], ['Content-Type' => 'application/json'], json_encode([
-            'email' => 'auth-user@example.com',
+            'email' => 'test-user@example.com',
         ]));
 
         $client->request('GET', self::URI . '/wrong-token', [], [], ['Content-Type' => 'application/json']);

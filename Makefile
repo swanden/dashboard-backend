@@ -36,6 +36,8 @@ migrations:
 	docker-compose run --rm php-cli bin/console doctrine:migrations:migrate --no-interaction
 migrate:
 	docker-compose run --rm php-cli bin/console doctrine:migrations:migrate --no-interaction
+migrations-diff:
+	docker-compose run --rm php-cli bin/console doctrine:migrations:diff
 scheme-update:
 	docker-compose run --rm php-cli bin/console doctrine:schema:update --force
 fixtures:

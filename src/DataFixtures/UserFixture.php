@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Model\User\Entity\User\Email;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\Id;
@@ -26,6 +27,7 @@ final class UserFixture extends Fixture
         $user = new User(
             Id::next(),
             new \DateTimeImmutable(),
+            new Name('Admin', 'Admin'),
             new Email('admin@example.com'),
             $hash,
             'token'

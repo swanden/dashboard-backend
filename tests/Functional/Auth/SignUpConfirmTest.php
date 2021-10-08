@@ -28,12 +28,13 @@ final class SignUpConfirmTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', '/auth/signup', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'test-user@example.com',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'new-user@example.com',
             'password' => 'password',
         ]));
 
+        self::assertEquals(201, $client->getResponse()->getStatusCode());
         self::assertEmailCount(1);
 
         $mailCollector = $client->getProfile()->getCollector('mailer');
@@ -53,12 +54,13 @@ final class SignUpConfirmTest extends WebTestCase
         $client = static::createClient();
         $client->enableProfiler();
         $client->request('POST', '/auth/signup', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'test-user@example.com',
+            'firstname' => 'John',
+            'lastname' => 'Doe',
+            'email' => 'new-user@example.com',
             'password' => 'password',
         ]));
 
+        self::assertEquals(201, $client->getResponse()->getStatusCode());
         self::assertEmailCount(1);
 
         $token = 'wrong-token';

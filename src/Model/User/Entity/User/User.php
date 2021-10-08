@@ -43,6 +43,10 @@ final class User
          */
         private \DateTimeImmutable $date,
         /**
+         * @ORM\Embedded(class="Name")
+         */
+        private Name $name,
+        /**
          * @ORM\Column(type="user_user_email", nullable=true)
          */
         private Email $email,
@@ -98,6 +102,11 @@ final class User
         $this->resetToken = null;
     }
 
+    public function changeName(Name $name): void
+    {
+        $this->name = $name;
+    }
+
     public function changeRole(Role $role): void
     {
         if ($this->role->isEqual($role)) {
@@ -126,6 +135,11 @@ final class User
         return $this->id;
     }
 
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
     public function getEmail(): Email
     {
         return $this->email;
@@ -149,6 +163,11 @@ final class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**
