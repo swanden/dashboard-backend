@@ -33,8 +33,8 @@ final class ProfileController extends BaseController
             'last' => $user->getName()->getLast(),
             'email' => $user->getEmail()->getValue(),
             'created' => $user->getDate()->format($this->getParameter('app.datetime_format')),
-            'role' => ucfirst(strtolower($user->getRole()->getName())),
-            'status' => ucfirst(strtolower($user->getStatus())),
+            'role' => $user->getRole()->getUCFirstName(),
+            'status' => $user->getUCFirstStatus(),
         ], Response::HTTP_OK);
     }
 
@@ -63,5 +63,11 @@ final class ProfileController extends BaseController
         $handler->handle($command);
 
         return new JsonResponse(status: Response::HTTP_OK);
+    }
+
+    #[Route('/profile/role', name: 'profile.role', methods: ['GET'])]
+    public function role(): Response
+    {
+        return $this->json($this->getUser()->getRoles(), Response::HTTP_OK);
     }
 }

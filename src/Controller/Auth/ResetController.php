@@ -24,7 +24,7 @@ final class ResetController extends BaseController
     }
 
     #[Route('/auth/reset/request', name: 'auth.reset', methods: ["POST"])]
-    public function request(Request $request, Reset\Request\Handler $handler): Response
+    public function request(Request $request, Reset\Request\Handler $handler): JsonResponse
     {
         $errors = $this->requestValidator->validate(Reset\Request\Command::class, $request, RequestType::BODY);
         if (\count($errors)) {
@@ -48,7 +48,7 @@ final class ResetController extends BaseController
     }
 
     #[Route('/auth/reset', name: 'auth.reset.confirm', methods: ["POST"])]
-    public function reset(Request $request, Reset\Reset\Handler $handler, UserFetcher $users): Response
+    public function reset(Request $request, Reset\Reset\Handler $handler, UserFetcher $users): JsonResponse
     {
         $errors = $this->requestValidator->validate(Reset\Reset\Command::class, $request, RequestType::BODY);
         if (\count($errors)) {
@@ -81,7 +81,7 @@ final class ResetController extends BaseController
     }
 
     #[Route('/auth/reset/validate_token/{token}', name: 'auth.reset.token.validate', methods: ["GET"])]
-    public function validate_token(string $token, UserFetcher $users): Response
+    public function validate_token(string $token, UserFetcher $users): JsonResponse
     {
         if (!$users->existsByResetToken($token)) {
             return $this->json([

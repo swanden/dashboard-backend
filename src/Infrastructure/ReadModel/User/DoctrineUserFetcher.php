@@ -8,6 +8,7 @@ use App\Model\User\Entity\User\User;
 use App\ReadModel\NotFoundException;
 use App\ReadModel\User\AuthView;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\User\UsersView;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,5 +65,29 @@ final class DoctrineUserFetcher implements UserFetcher
             throw new NotFoundException('User is not found');
         }
         return $user;
+    }
+
+    /**
+     * @throws \Exception
+     * @return array<UsersView>
+     */
+    public function all(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'name_first AS firstname',
+                'name_last AS lastname',
+                'date',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->execute();
+
+        $result = $stmt->fetchAll();
+
+        return $result ?: [];
     }
 }

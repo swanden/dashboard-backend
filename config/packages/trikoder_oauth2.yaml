@@ -6,6 +6,11 @@ trikoder_oauth2:
 
         encryption_key: '%env(string:OAUTH2_ENCRYPTION_KEY)%'   # (Optional) Change this
 
+        # How long the issued access token should be valid for, used as a default if there is no grant type specific value set.
+        # The value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+        access_token_ttl:     PT1H
+#        access_token_ttl: PT10S
+
     resource_server:
         public_key: /app/var/oauth/public.key                       # Change this
 

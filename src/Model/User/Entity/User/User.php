@@ -18,6 +18,7 @@ final class User
 {
     private const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+    public const STATUS_BLOCKED = 'blocked';
 
     /**
      * @ORM\Column(type="string", length=16)
@@ -63,6 +64,37 @@ final class User
         $this->role = Role::USER;
         $this->status = self::STATUS_WAIT;
         $this->resetToken = null;
+    }
+
+    public static function create(Id $id, \DateTimeImmutable $date, Name $name, Email $email, Role $role, string $hash): self
+    {
+        $user = new self($id, $date, $name, $email, $hash, null);
+        $user->role = $role;
+        $user->status = self::STATUS_ACTIVE;
+        return $user;
+    }
+
+    public function edit(Email $email, Name $name, Role $role): void
+    {
+        $this->name = $name;
+        $this->email = $email;
+        $this->role = $role;
+    }
+
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+    }
+
+    public function block(): void
+    {
+        if ($this->isBlocked()) {
+            throw new \DomainException('User is already blocked.');
+        }
+        $this->status = self::STATUS_BLOCKED;
     }
 
     public function confirmSignUp(): void
@@ -125,6 +157,11 @@ final class User
         return $this->status === self::STATUS_ACTIVE;
     }
 
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
+    }
+
     public function getDate(): \DateTimeImmutable
     {
         return $this->date;
@@ -168,6 +205,11 @@ final class User
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function getUCFirstStatus(): string
+    {
+        return ucfirst(strtolower($this->status));
     }
 
     /**

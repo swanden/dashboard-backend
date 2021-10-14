@@ -7,6 +7,11 @@ enum Role: string
     case USER = 'ROLE_USER';
     case ADMIN = 'ROLE_ADMIN';
 
+    public static function create(string $name): ?self
+    {
+        return self::tryFrom('ROLE_' . mb_strtoupper($name));
+    }
+
     public function isAdmin(): bool
     {
         return $this->name === self::ADMIN->name;
@@ -25,5 +30,10 @@ enum Role: string
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getUCFirstName(): string
+    {
+        return ucfirst(strtolower($this->name));
     }
 }

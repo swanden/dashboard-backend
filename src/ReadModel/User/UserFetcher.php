@@ -13,4 +13,9 @@ interface UserFetcher
     public function findForAuth(string $email): ?AuthView;
 
     public function get(string $id): User;
+
+    /**
+     * @return array<User>
+     */
+    public function all(): array;
 }

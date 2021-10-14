@@ -20,6 +20,7 @@ final class UserBuilder
     private string $hash;
     private string $token;
     private bool $confirmed;
+    private bool $blocked;
     private ?Role $role;
 
     public function __construct()
@@ -28,6 +29,7 @@ final class UserBuilder
         $this->date = new \DateTimeImmutable();
         $this->name = new Name('First', 'Last');
         $this->confirmed = false;
+        $this->blocked = false;
         $this->role = null;
     }
 
@@ -35,6 +37,13 @@ final class UserBuilder
     {
         $clone = clone $this;
         $clone->confirmed = true;
+        return $clone;
+    }
+
+    public function blocked(): self
+    {
+        $clone = clone $this;
+        $clone->blocked = true;
         return $clone;
     }
 
@@ -75,6 +84,10 @@ final class UserBuilder
 
         if ($this->confirmed) {
             $user->confirmSignUp();
+        }
+
+        if ($this->blocked) {
+            $user->block();
         }
 
         if ($this->role) {
