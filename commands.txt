@@ -1,0 +1,152 @@
+docker-compose run --rm php-cli composer create-project symfony/skeleton goodlift --ignore-platform-reqs
+docker-compose run --rm php-cli composer require --dev vimeo/psalm
+docker-compose run --rm php-cli composer require annotations
+
+Security
+docker-compose run --rm php-cli composer require symfony/security-bundle
+docker-compose run --rm php-cli composer require symfony/maker-bundle --dev
+docker-compose run --rm php-cli composer require orm-pack --ignore-platform-reqs (на время установки бандла перейти на php 8.0.
+лучше вообще на время разворачивания вещей связанных с фреймворком перейти на php 8.0. не работает doctrine'а поэтому приходится врубать 8.0 на постоянку)
+https://symfony.com/doc/current/security.html до пункта 3a
+docker-compose run --rm php-cli php bin/console make:user
+docker-compose run --rm php-cli php bin/console make:migration
+docker-compose run --rm php-cli php bin/console doctrine:migrations:migrate
+docker-compose run --rm php-cli composer require orm-fixtures --dev
+docker-compose run --rm php-cli php bin/console make:fixtures
+docker-compose run --rm php-cli php bin/console security:hash-password - самостоятельное хеширование пароля
+docker-compose run --rm php-cli php bin/console doctrine:fixtures:load
+
+OAuth2
+https://packagist.org/packages/trikoder/oauth2-bundle
+https://github.com/trikoder/oauth2-bundle
+https://github.com/trikoder/oauth2-bundle/blob/v3.x/docs/basic-setup.md
+https://github.com/trikoder/oauth2-bundle/blob/v3.x/docs/password-grant-handling.md
+https://oauth2.thephpleague.com/
+
+Устанавливать версию именно v3.x-dev, там фикс бага с sensio/framework-extra-bundle
+docker-compose run --rm php-cli composer require trikoder/oauth2-bundle:v3.x-dev nyholm/psr7 (в конце будет вывод как настраивать)
+
+ trikoder/oauth2-bundle  instructions:
+
+  1.  Provide a key pair
+    i)   Generate a private/public key pair (preferably with a password): https://oauth2.thephpleague.com/installation/#generating-public-and-private-keys
+    ii)  Configure the private_key and public_key with the respective key locations
+    iii) (Optional) Set the private_key_passphrase to the private key password set in the previous step
+
+  2.  Configure the OAuth2 encryption key
+    i)   Add the OAUTH2_ENCRYPTION_KEY env variable in .env.local (don't commit your production secrets): https://oauth2.thephpleague.com/installation/#string-password
+    ii)  Configure the encryption_key with a secure encryption key: https://oauth2.thephpleague.com/installation/#string-password
+
+  3.  Update the database
+    i)   Update the database so bundle entities can be persisted using Doctrine: bin/console doctrine:schema:update --force
+
+  4.  Install a PSR 7/17 implementation
+    i)   Require a PSR 7/17 implementation. We recommend that you use nyholm/psr7.
+    ii)  (Optional) Choose a different implementation package: https://github.com/trikoder/oauth2-bundle/blob/v3.x/docs/psr-implementation-switching.md
+
+  5.  Read the docs
+    i)   Read the documentation at https://github.com/trikoder/oauth2-bundle/blob/v3.x/docs/basic-setup.md
+
+make oauth-keys
+docker-compose run --rm php-cli bin/console doctrine:schema:update --force
+https://github.com/trikoder/oauth2-bundle/blob/v3.x/docs/basic-setup.md
+docker-compose run --rm php-cli bin/console trikoder:oauth2:create-client
+config/packages/security.yaml
+    enable_authenticator_manager: false
+
+Unit testing
+docker-compose run --rm php-cli composer require --dev phpunit/phpunit symfony/test-pack
+docker-compose run --rm php-cli composer require ramsey/uuid
+
+JSON Errors
+https://symfony.com/doc/current/controller/error_pages.html -> Overriding Error output for non-HTML formats
+docker-compose run --rm php-cli composer require symfony/serializer-pack
+Чтобы на запрос ошибки выводились в json в заголовках запроса должен быть Accept: application/json
+Для кастомизации json'а ошибок реализовать class MyCustomProblemNormalizer implements NormalizerInterface из инструкции
+
+Mailer
+https://symfony.com/doc/current/mailer.html
+https://symfony.com/doc/current/mailer.html#configuring-emails-globally
+https://symfony.com/doc/current/mailer.html#twig-html-css
+https://symfony.com/doc/current/templates.html
+docker-compose run --rm php-cli composer require symfony/mailer
+docker-compose run --rm php-cli composer require symfony/twig-bundle
+(для отправки email должно хватить symfony/twig-bundle, если нет, то можно попробовать docker-compose run --rm php-cli composer require symfony/twig-pack)
+
+REST Controllers
+https://symfony.com/doc/current/validation.html
+https://symfony.com/doc/current/components/serializer.html#serializing-an-object
+docker-compose run --rm php-cli composer require symfony/validator
+docker-compose run --rm php-cli composer require symfony/monolog-bundle --with-all-dependencies
+docker-compose run --rm php-cli composer require symfony/serializer
+
+Functional tests
+https://symfony.com/bundles/DoctrineFixturesBundle/current/index.html
+https://symfony.com/doc/current/testing.html
+https://symfony.com/doc/current/testing.html#configuring-a-database-for-tests
+Не забывать для тестов обновлять тестовую базу данных
+Для тестов создавать отдельный файл config/services_test.yaml куда включать путь для автолоада тестовых фикстур
+чтобы они попадали только в тестовую базу
+    App\Tests\Functional\:
+        resource: '../tests/Functional/**/*Fixture.php'
+        tags: ['doctrine.fixture.orm']
+docker-compose run --rm php-cli php bin/console --env=test doctrine:database:drop --force
+docker-compose run --rm php-cli php bin/console --env=test doctrine:database:create
+docker-compose run --rm php-cli php bin/console --env=test doctrine:schema:create
+docker-compose run --rm php-cli php bin/console --env=test doctrine:fixtures:load
+docker-compose run --rm php-cli php bin/console doctrine:fixtures:load --help
+docker-compose run --rm php-cli php bin/console security:hash-password password
+
+https://nerdpress.org/2019/08/29/disable-symfony-deprecation-warnings-in-phpunit-tests/
+
+https://symfony.com/doc/current/testing.html#resetting-the-database-automatically-before-each-test
+docker-compose run --rm php-cli composer require --dev dama/doctrine-test-bundle
+
+https://github.com/symfony/symfony/issues/39511#issuecomment-774444897 - чтобы работали assert'ы для отправки email'ов
+
+Чтобы composer не ругался на несовместимость версий php
+docker-compose run --rm php-cli composer install --ignore-platform-req=php
+Чтобы phpunit игнорировал Deprecation сообщения php в phpunit.xml.dist
+<ini name="error_reporting" value="E_ALL^E_DEPRECATED" /> или <ini name="error_reporting" value="0" />
+по умолчанию
+<ini name="error_reporting" value="-1" />
+
+Валидация
+https://symfony.com/doc/current/validation.html
+https://symfony.com/doc/current/validation/raw_values.html
+Если тесты или эндпоинты будут выдавать ошибку Error: Object of class App\Validator\RequestType could not be converted to string
+надо убрать из DI папку src/Validator
+в config/services.yaml и config/services_test.yaml прописать
+    App\:
+        resource: '../src/*'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+            - '../src/Validator/'
+а в коньтроллерах создавать экземляр RequestValidator вручную
+
+CORS
+https://github.com/nelmio/NelmioCorsBundle
+docker-compose run --rm php-cli composer req cors --ignore-platform-reqs
+
+.env переменные в шаблонах twig
+https://stackoverflow.com/a/50422087
+https://stackoverflow.com/a/66201706 - это вариант не работает в Functional тестах
+
+
+ReadModel нужны для CQRS чтобы только что-то доставать из бд. Команды производят действия, т.е. изменяют что-то в БД.
+Например, validateToken.
+Плюс ReadModel легковесные, они не работают с тяжеловесными сущностями Доменной Модели.
+Command.php - это и есть Command из Command Query Separation
+
+Кастомный конфигурационный параметр
+https://stackoverflow.com/a/63585004
+
+Symfony UUID validation
+https://symfony.com/doc/current/reference/constraints/Uuid.html
+
+Чтобы отлаживать refresh токена, задавать ему срок истечения несколько секнуд
+https://github.com/trikoder/oauth2-bundle
+access_token_ttl:     PT10S

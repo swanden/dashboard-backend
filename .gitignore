@@ -19,6 +19,5 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-commands.txt
 todo.txt
 differences.txt
